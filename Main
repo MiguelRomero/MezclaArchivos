@@ -1,0 +1,107 @@
+package mezcla;
+import java.io.File;
+import java.io.RandomAccessFile;
+import java.io.IOException;
+import java.util.Scanner;
+public class Mezcla {
+     
+     public static void MezclaDirecta(int [ ] a)
+	{
+		int[] tmp = new int[a.length];
+		MezclaDirecta(a, tmp,  0,  a.length - 1);
+	}
+     private static void MezclaDirecta(int [ ] a, int [ ] tmp, int izquierda, int derecha)
+	{
+		if( izquierda < derecha )
+		{
+			int centro = (izquierda + derecha) / 2;
+			MezclaDirecta(a, tmp, izquierda, centro);
+			MezclaDirecta(a, tmp, centro + 1, derecha);
+			mezcla(a, tmp, izquierda, centro + 1, derecha);
+		}
+	}
+ private static void mezcla(int[ ] a, int[ ] tmp, int izquierda, int derecha, int finalderecha )
+    {
+        int finalizquierda = derecha - 1;
+        int k = izquierda;
+        int num = finalderecha - izquierda + 1;
+
+        while(izquierda <= finalizquierda && derecha <= finalderecha)
+            if(a[izquierda]<=(a[derecha]))
+                tmp[k++] = a[izquierda++];
+            else
+                tmp[k++] = a[derecha++];
+
+        while(izquierda <= finalizquierda)    //copia la primera mitad
+            tmp[k++] = a[izquierda++];
+
+        while(derecha <= finalderecha)  // copia el resto
+            tmp[k++] = a[derecha++];
+
+        // copia temporal de nuevo
+        for(int i = 0; i < num; i++, finalderecha--)
+            a[finalderecha] = tmp[finalderecha];
+    }
+public static void main(String[] args) throws IOException  {
+         RandomAccessFile file;
+         int p;
+        Scanner sc = new Scanner(System.in);
+         System.out.println("Dame el numero de datos a ordenar");
+             p=sc.nextInt();
+        int u=0;
+        int numeros[]= new int[p];
+        int leesin;
+//....................
+//....................  
+for(int z=0;z<p;z++){
+    try {
+      file = new RandomAccessFile("write.txt", "rw");
+      long FileSize = file.length();
+      file.seek(FileSize);
+      System.out.println("Dame el numero ");
+      leesin = sc.nextInt();
+      file.writeInt(leesin);
+      numeros[z]=leesin;
+      leesin=0;
+      if(z==p-1){
+           MezclaDirecta(numeros);
+          file.seek(0);			
+			for (int j = 0; j < p; j++) {				
+				leesin = file.readInt();				
+				System.out.println(leesin);
+				}                                          
+                            try{
+                                leesin=0;
+                                file = new RandomAccessFile("equis.txt", "rw");
+                                file.seek(FileSize);
+                                    for(int indice=0;indice<p;indice++)
+                                     {
+                                         int aux=0;
+                                         aux=numeros[indice];
+                                          file.writeInt(aux);                                       
+                                            }                                   
+                                               file.seek(0);
+                                                for(int j=0;j<file.length();j++)
+                                                 {
+                                    
+                                                   leesin=file.readInt();
+                                                   if(leesin!=0){
+                                                   System.out.println("El archivo ordenado"+leesin);
+                                                   }
+                                                   leesin=0;                                                 
+                                     }
+                                                 file.close();
+                            }catch(IOException op){
+                                op.getStackTrace();
+                            }                                                      
+                        }        
+    file.close();  
+
+    } catch (IOException e) {
+      e.getStackTrace();
+    }
+}   
+}
+}
+       
+    
